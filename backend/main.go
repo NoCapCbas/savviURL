@@ -4,9 +4,14 @@ import (
   "log"
   "net/http"
   "urlshortener/urlshortener"
+  "urlshortener/database"
 )
 
 func main() {
+  database.Connect()
+  database.AutoMigrate()
+  defer database.CloseDB()
+
   us := urlshortener.NewURLShortener()
 
   http.HandleFunc("/shorten", us.ShortenURL)

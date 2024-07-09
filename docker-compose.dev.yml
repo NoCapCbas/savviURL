@@ -1,0 +1,22 @@
+version: '3.9'
+services:
+  backend: 
+    build:
+      context: ./backend
+      dockerfile: go.Dockerfile
+    ports:
+      - "8083:8083"
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - db
+
+  db: 
+    image: postgres:latest  # Change the image to PostgreSQL
+    restart: always 
+    environment: 
+      POSTGRES_DB: ambassador  
+      POSTGRES_USER: postgres 
+      POSTGRES_PASSWORD: root    
+    volumes: 
+      - .dbdata:/var/lib/postgresql/data  # Mount data volume for persistence

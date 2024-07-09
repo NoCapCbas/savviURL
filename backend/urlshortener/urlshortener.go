@@ -7,17 +7,16 @@ import (
   "sync"
   "time"
   "fmt"
+  "log"
+  "urlshortener/database"
 )
 
 type URLShortener struct {
   sync.Mutex
-  UrlMap map[string]string
 }
 
 func NewURLShortener() *URLShortener {
-  return &URLShortener{
-    UrlMap: make(map[string]string),
-  }
+  return &URLShortener{}
 }
 
 func (us *URLShortener) GenerateKey(n int) string {
@@ -42,11 +41,14 @@ func (us *URLShortener) ShortenURL(w http.ResponseWriter, r *http.Request) {
   // Debugging
   fmt.Printf("Request Body: %+v\n", req)
 
-  us.Lock()
-  defer us.Unlock()
-
   key := us.GenerateKey(6)
-  us.UrlMap[key] = req.URL
+
+  err := database.CreateURLMapping(key, req.URL) 
+  if err != nil {
+    log.Printf("Failed to insert URL mappings into database: %v\n", err)
+    http.Error(w, "Failed to shorten URL", http.StatusInternalServerError)
+    return
+  }
 
   resp := map[string]string{"short_url": "http://localhost:8083/" + key}
   if err := json.NewEncoder(w).Encode(resp); err != nil {
@@ -58,11 +60,9 @@ func (us *URLShortener) ShortenURL(w http.ResponseWriter, r *http.Request) {
 func (us *URLShortener) Redirect(w http.ResponseWriter, r *http.Request) {
   key := r.URL.Path[1:]
 
-  us.Lock()
-  longURL, exists := us.UrlMap[key]
-  us.Unlock()
-
-  if !exists {
+  longURL, err := database.GetURLMapping(key) 
+  if err != nil {
+    log.Printf("Error retrieving long url from database: %v\n", err)
     http.NotFound(w, r)
     return
   }
