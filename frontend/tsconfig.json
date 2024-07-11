@@ -1,13 +1,10 @@
 {
   "extends": "astro/tsconfigs/strict",
   "compilerOptions": {
-    "jsx": "react-jsx",
-    "jsxImportSource": "react",
-    "baseUrl": ".",
-    "paths": {
-      "@/*": [
-        "./src/*"
-      ]
+    "baseUrl": ".",             // Base directory to resolve non-absolute module names
+    "paths": {                  // Paths for module resolution
+      "@components/*": ["src/components/*"],
+      "@layouts/*": ["src/layouts/*"]
     }
   }
 }
