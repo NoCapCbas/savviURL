@@ -8,9 +8,15 @@ REDIS_URL=redis://localhost:6379
 
 Usage with mongo db
 ```shell
-URL_DB=redis
+URL_DB=mongo
 MONGO_URL=mongodb://localhost/urlshortener
 MONGO_TIMEOUT=30
 MONGO_DB=urlshortener
 ```
+
+Usage with in memory
+```shell
+URL_DB=inmem
+```
+
 
