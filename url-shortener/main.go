@@ -12,10 +12,10 @@ import (
 	"syscall"
 
 	h "github.com/NoCapCbas/url-shortener/api"
-	mr "github.com/NoCapCbas/url-shortener/repository/mongo"
-	rr "github.com/NoCapCbas/url-shortener/repository/redis"
+	mongoRepo "github.com/NoCapCbas/url-shortener/repository/mongo"
+	redisRepo "github.com/NoCapCbas/url-shortener/repository/redis"
+	inMemRepo "github.com/NoCapCbas/url-shortener/repository/inMemory"
 
-	"github.com/NoCapCbas/url-shortener/shortener"
 )
 
 // https://www.google.com -> 98sj1-293
@@ -65,21 +65,26 @@ func httpPort() string {
 func chooseRepo() urlshortener.RedirectRepository {
 	switch os.Getenv("URL_DB") {
 	case "redis":
+    log.Println("Using redis for data source...")
 		redisURL := os.Getenv("REDIS_URL")
-		repo, err := rr.NewRedisRepository(redisURL)
+		repo, err := redisRepo.NewRedisRepository(redisURL)
 		if err != nil {
 			log.Fatal(err)
 		}
 		return repo
 	case "mongo":
+    log.Println("Using mongo for data source...")
 		mongoURL := os.Getenv("MONGO_URL")
 		mongodb := os.Getenv("MONGO_DB")
 		mongoTimeout, _ := strconv.Atoi(os.Getenv("MONGO_TIMEOUT"))
-		repo, err := mr.NewMongoRepository(mongoURL, mongodb, mongoTimeout)
+		repo, err := mongoRepo.NewMongoRepository(mongoURL, mongodb, mongoTimeout)
 		if err != nil {
 			log.Fatal(err)
 		}
 		return repo
+  default:
+    log.Println("Using in memory for data source...")
+    repo := inMemRepo.NewInMemoryRepository() 
 	}
 	return nil
 }

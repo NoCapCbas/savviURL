@@ -14,7 +14,7 @@ type inMemoryRepository struct {
   mu sync.RWMutex
 }
 
-func newInMemoryRepository() urlshortener.RedirectRepository {
+func NewInMemoryRepository() urlshortener.RedirectRepository {
 
   return &inMemoryRepository{
     store: make(map[string]*urlshortener.Redirect),
@@ -22,7 +22,7 @@ func newInMemoryRepository() urlshortener.RedirectRepository {
 
 }
 
-func (r *inMemoryRepository) Find(code string) (*urlshortener.Redirect) {
+func (r *inMemoryRepository) Find(code string) (*urlshortener.Redirect, error) {
   r.mu.RLock()
   defer r.mu.RUnlock()
 

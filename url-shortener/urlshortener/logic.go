@@ -4,7 +4,7 @@ import (
   "errors"
   "time"
 
-  "github.com/pkg/errors"
+  errs "github.com/pkg/errors"
   "github.com/teris-io/shortid"
   "gopkg.in/dealancer/validate.v2"
 )

@@ -8,8 +8,7 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/pkg/errors"
 
-	js "github.com/NoCapCbas/url-shortener//serializer/json"
-	ms "github.com/NoCapCbas/url-shortener/serializer/msgpack"
+	js "github.com/NoCapCbas/url-shortener/serializer/json"
 	"github.com/NoCapCbas/url-shortener/urlshortener"
 )
 
@@ -36,9 +35,6 @@ func setupResponse(w http.ResponseWriter, contentType string, body []byte, statu
 }
 
 func (h *handler) serializer(contentType string) urlshortener.RedirectSerializer {
-	if contentType == "application/x-msgpack" {
-		return &ms.Redirect{}
-	}
 	return &js.Redirect{}
 }
 
