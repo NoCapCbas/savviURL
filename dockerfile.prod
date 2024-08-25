@@ -30,7 +30,7 @@ COPY --from=builder /app/main .
 
 # Copy any additional necessary files (e.g., templates, static files)
 COPY --from=builder /app/templates ./ui/templates
-COPY --from=builder /app/static ./ui/static
+# COPY --from=builder /app/static ./ui/static
 
 
 # Run the binary
