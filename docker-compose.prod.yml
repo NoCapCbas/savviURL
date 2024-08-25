@@ -1,22 +1,12 @@
-version: '3.9'
-services:
-  backend: 
-    build:
-      context: ./backend
-      dockerfile: go.Dockerfile
-    ports:
-      - "8083:8083"
-    volumes:
-      - ./backend:/app
-    depends_on:
-      - db
+version: '3.7'
 
-  db: 
-    image: postgres:latest  # Change the image to PostgreSQL
-    restart: always 
-    environment: 
-      POSTGRES_DB: ambassador  
-      POSTGRES_USER: postgres 
-      POSTGRES_PASSWORD: root    
-    volumes: 
-      - .dbdata:/var/lib/postgresql/data  # Mount data volume for persistence
+services:
+  savvi-url-shortener:
+    build:
+      context: .
+      dockerfile: dockerfile.prod
+    ports:
+      - "8070:8080"
+    environment:
+      - ENV=production
+    restart: always

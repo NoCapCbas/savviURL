@@ -1,0 +1,19 @@
+{{ define "content" }}
+<div class="max-w-md mx-auto bg-white p-8 rounded-lg shadow-md">
+    <h1 class="text-2xl font-bold mb-6 text-center">Login</h1>
+    <form action="/login" method="POST" class="space-y-4">
+        <input type="text" name="username" placeholder="Username" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <input type="password" name="password" placeholder="Password" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <button type="submit" class="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300">Log In</button>
+    </form>
+    <div class="my-6 flex items-center">
+        <div class="flex-grow border-t border-gray-300"></div>
+        <span class="px-4 text-gray-500">or</span>
+        <div class="flex-grow border-t border-gray-300"></div>
+    </div>
+    <a href="/auth/google/signin" class="flex items-center justify-center bg-white border border-gray-300 rounded-md py-2 px-4 hover:bg-gray-50 transition duration-300">
+        <img src="https://www.google.com/favicon.ico" alt="Google logo" class="w-5 h-5 mr-2">
+        <span>Log in with Google</span>
+    </a>
+</div>
+{{ end }}
