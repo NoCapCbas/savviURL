@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  backend:
+    image: url-shortener-backend
+    container_name: url-shortener-backend
+    build: ./backend
+    ports:
+      - "${BACKEND_PORT}:${BACKEND_PORT}"
+    depends_on:
+      - redis
+    environment:
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+    networks:
+      - url-shortener-network
+
+  redis:
+    container_name: url-shortener-redis
+    image: redis:alpine
+    ports:
+      - "${REDIS_PORT}:${REDIS_PORT}"
+    volumes:
+      - url-shortener-redis-data:/data
+    networks:
+      - url-shortener-network
+  
+  watchtower:
+    image: containrrr/watchtower
+    command:
+      - "--label-enable"
+      - "--interval"
+      - "30"
+      - "--rolling-restart"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - url-shortener-network
+  
+  reverse-proxy:
+    image: traefik:v3.1
+    command:
+      - "--providers.docker"
+      - "--providers.docker.network=url-shortener-network"
+
+    networks:
+      - url-shortener-network
+
+networks:
+  url-shortener-network:
+    driver: bridge
+
+volumes:
+  url-shortener-redis-data:
